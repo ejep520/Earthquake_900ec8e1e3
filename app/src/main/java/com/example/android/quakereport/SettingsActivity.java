@@ -16,9 +16,9 @@
 package com.example.android.quakereport;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -28,7 +28,11 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
     }
 
-    public static class EarthquakePreferenceFragment extends PreferenceFragment {
-
+    public static class EarthquakePreferenceFragment extends PreferenceFragmentCompat {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferenceFromResource(R.xml.settings_main);
+        }
     }
 }
