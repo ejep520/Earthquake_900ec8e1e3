@@ -73,7 +73,7 @@ public class EarthquakeActivity extends AppCompatActivity
         earthquakeListView.setEmptyView(mEmptyStateTextView);
 
         // Create a new adapter that takes an empty list of earthquakes as input
-        mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
+        mAdapter = new EarthquakeAdapter(this, new ArrayList<>());
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
@@ -81,21 +81,18 @@ public class EarthquakeActivity extends AppCompatActivity
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
         // to open a website with more information about the selected earthquake.
-        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Find the current earthquake that was clicked on
-                Earthquake currentEarthquake = mAdapter.getItem(position);
+        earthquakeListView.setOnItemClickListener((adapterView, view, position, l) -> {
+            // Find the current earthquake that was clicked on
+            Earthquake currentEarthquake = mAdapter.getItem(position);
 
-                // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri earthquakeUri = Uri.parse(currentEarthquake.getUrl());
+            // Convert the String URL into a URI object (to pass into the Intent constructor)
+            Uri earthquakeUri = Uri.parse(currentEarthquake.getUrl());
 
-                // Create a new intent to view the earthquake URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
+            // Create a new intent to view the earthquake URI
+            Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
 
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
-            }
+            // Send the intent to launch a new activity
+            startActivity(websiteIntent);
         });
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
@@ -132,12 +129,16 @@ public class EarthquakeActivity extends AppCompatActivity
         String minMagnitude = sharedPreferences.getString(
                 getString(R.string.settings_min_magnitude_key),
                 getString(R.string.settings_min_magnitude_default));
+        String orderBy = sharedPreferences.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
         Uri baseUri = Uri.parse(USGS_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
         uriBuilder.appendQueryParameter("format", "geojson");
         uriBuilder.appendQueryParameter("limit", "10");
         uriBuilder.appendQueryParameter("minmag", minMagnitude);
-        uriBuilder.appendQueryParameter("orderby", "time");
+        uriBuilder.appendQueryParameter("orderby", orderBy);
         return new EarthquakeLoader(this, uriBuilder.toString());
     }
 
